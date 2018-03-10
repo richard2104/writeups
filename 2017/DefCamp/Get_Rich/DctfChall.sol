@@ -9,7 +9,7 @@ contract Owned {
 
     modifier onlyOwner {
         require(msg.sender == owner);
-        _;
+        _; // 이 뒤로 나중에 하라는 뜻
     }
 
     function transferOwnership(address newOwner) onlyOwner {
@@ -59,7 +59,8 @@ contract DctfChall is Owned {
 
 	function withdraw(uint256 amount) onlyWithMoney(amount) {
 		require(amount > 0);
-		msg.sender.call.value(amount)();
+		msg.sender.call.value(amount)(); //이 코드가 먼저 존재해서 만약 withdraw()를 재귀적으로 호출하면
+						 //fallback함수 끝날때까지는 마이너스 안됨
 		balanceOf[msg.sender]-=amount;
 		Withdraw(msg.sender, amount);
 	}
@@ -69,7 +70,8 @@ contract DctfChall is Owned {
 	}
 
 	function() payable { }
-
+	
+	// event는 블록체인의 log entries에 사용되는거니까 걱정ㄴㄴ
 	event Transfer(address indexed from, address indexed to, uint256 value);
 	event Withdraw(address indexed to, uint256 value);
 }
