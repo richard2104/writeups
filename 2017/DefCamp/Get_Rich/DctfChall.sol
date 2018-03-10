@@ -30,7 +30,7 @@ contract DctfChall is Owned {
 	}
 
 	function DctfChall(uint256 _supply, string _name, string _symbol, uint8 _decimals) {
-		if(_supply == 0) _supply = 13333337;
+		if(_supply == 0) _supply = 13333337; //ERC-20 token 총개수
 
 		balanceOf[msg.sender] = _supply;
 		name                  = _name;
@@ -38,13 +38,13 @@ contract DctfChall is Owned {
 		decimals              = _decimals;
 	}
 
-	function invest(address to) payable {
+	function invest(address to) payable { //remix 롭스텐테스트넷에 invest(contract주소)하니까 돈보내짐
 		require(msg.value > 0);
 		balanceOf[to] += msg.value;
 		Transfer(msg.sender, to, msg.value);
 	}
 
-	function transferFrom(address to, uint256 amount) {
+	function transferFrom(address to, uint256 amount) { //token을 transfer
 		require(amount > 0);
 		require(balanceOf[msg.sender] >= amount);
 
@@ -57,7 +57,7 @@ contract DctfChall is Owned {
 		return balanceOf[to];
 	}
 
-	function withdraw(uint256 amount) onlyWithMoney(amount) {
+	function withdraw(uint256 amount) onlyWithMoney(amount) { //modifier. 돈있는사람만댐벼라
 		require(amount > 0);
 		msg.sender.call.value(amount)(); //이 코드가 먼저 존재해서 만약 withdraw()를 재귀적으로 호출하면
 						 //fallback함수 끝날때까지는 마이너스 안됨
@@ -65,7 +65,7 @@ contract DctfChall is Owned {
 		Withdraw(msg.sender, amount);
 	}
 
-	function getContractAddress() constant returns (address){
+	function getContractAddress() constant returns (address){ //Contract의 주소 반환
 	    return this;
 	}
 
